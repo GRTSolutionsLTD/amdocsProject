@@ -41,8 +41,31 @@ function ListPage() {
     setCenterPosition(focusPosition);
   }
 
+  function onSearchChanged(e) {
+    var value = e.target.value;
+    dispatch(listActions.setFilter(value));
+  }
+
   return (
     <>
+      <div className="row">
+        <div className="col">
+          <div class="input-group">
+            <input
+              type="search"
+              className="form-control rounded"
+              value={list.filterText}
+              onChange={onSearchChanged}
+              placeholder="Search"
+              aria-label="Search"
+              aria-describedby="search-addon"
+            />
+            <button type="button" className="btn btn-outline-primary">
+              search
+            </button>
+          </div>
+        </div>
+      </div>
       <div className="row">
         <div className="col-9">
           <div className="row">
@@ -54,7 +77,7 @@ function ListPage() {
               {list.items && (
                 <StoresList
                   items={list.items}
-                  filterText={""}
+                  filterText={list.filterText}
                   sortType={0}
                   onRowSelected={onRowSelected}
                 />
@@ -64,7 +87,11 @@ function ListPage() {
         </div>
         <div className="col-3">
           {mapPositions && (
-            <MapComponent positions={mapPositions} center={centerPosition} selected={selectedItem==null? null: selectedItem.id } />
+            <MapComponent
+              positions={mapPositions}
+              center={centerPosition}
+              selected={selectedItem == null ? null : selectedItem.id}
+            />
           )}
         </div>
       </div>

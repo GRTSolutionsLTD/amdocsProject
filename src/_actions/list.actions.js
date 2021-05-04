@@ -3,8 +3,13 @@ import { listService } from '../_services';
 
 export const listActions = {
     getAll,
-    delete: _delete
+    delete: _delete,
+    setFilter
 };
+
+function setFilter(filterText) {
+    return { type: listConstants.SET_FILTER, filterText }
+}
 
 function getAll() {
     return dispatch => {

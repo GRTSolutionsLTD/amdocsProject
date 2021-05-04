@@ -2,10 +2,16 @@ import { listConstants } from '../_constants';
 const initialState = {
     loading: false,
     error: false,
-    items: []
+    items: [],
+    filterText: ''
 }
 export function list(state = initialState, action) {
     switch (action.type) {
+        case listConstants.SET_FILTER:
+            return {
+                ...state,
+                filterText: action.filterText
+            }
         case listConstants.GETALL_REQUEST:
             return {
                 ...state,
