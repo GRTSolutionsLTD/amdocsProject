@@ -23,13 +23,13 @@ Geocode.enableDebug();
 
 // Get address from latitude & longitude.
 function getAddress(lat, lng) {
-  return Geocode.fromLatLng("48.8583701", "2.2922926").then(
+  return Geocode.fromLatLng(lat.toString(), lng.toString()).then(
     (response) => {
       const address = response.results[0].formatted_address;
       return address;
     },
     (error) => {
-      console.error(error);
+      //console.error(error);
     }
   );
 }
