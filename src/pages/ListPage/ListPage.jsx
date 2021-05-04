@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { orderBy, includes, isEmpty } from "lodash";
 
 import { listActions } from "../../_actions";
 import MapComponent from "../../_components/MapComponent/MapComponent";
@@ -10,10 +11,22 @@ import {
 
 function ListPage() {
   const list = useSelector((state) => state.list);
-  const mapPositions = getMapPoisitions(list.items);
   const [centerPosition, setCenterPosition] = useState(
     list.items.length > 0 ? list.items[0] : null
   );
+  const filteredItems = getFilteredItems(list.items, list.filterText);
+  const sortedItems = orderBy(
+    filteredItems,
+    "StoreName",
+    list.sortType == SortTypeEnum.DESC ? "desc" : "asc"
+  );
+  const mapPositions = getMapPoisitions(sortedItems);
+  function getFilteredItems(items, text) {
+    if (isEmpty(text)) return items;
+    return items.filter((item) => {
+      return includes(item.StoreName, text);
+    });
+  }
 
   const [selectedItem, setSeletctedItem] = useState(null);
 
@@ -23,8 +36,8 @@ function ListPage() {
     dispatch(listActions.getAll());
   }, []);
 
-  function getMapPoisitions() {
-    return list.items.map((item) => {
+  function getMapPoisitions(items) {
+    return items.map((item) => {
       return {
         key: item.id,
         lat: +item.Latitude,
@@ -57,7 +70,7 @@ function ListPage() {
     <>
       <div className="d-flex flex-row">
         <div className="flex-column">
-          <div class="input-group">
+          <div className="input-group">
             <input
               type="search"
               className="form-control rounded"
@@ -99,13 +112,8 @@ function ListPage() {
               {list.error && (
                 <span className="text-danger">ERROR: {list.error}</span>
               )}
-              {list.items && (
-                <StoresList
-                  items={list.items}
-                  filterText={list.filterText}
-                  sortType={list.sortType}
-                  onRowSelected={onRowSelected}
-                />
+              {sortedItems && (
+                <StoresList items={sortedItems} onRowSelected={onRowSelected} />
               )}
             </div>
           </div>
