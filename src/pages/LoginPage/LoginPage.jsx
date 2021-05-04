@@ -11,6 +11,7 @@ function LoginPage() {
         password: ''
     });
     const [submitted, setSubmitted] = useState(false);
+    
     const { username, password } = inputs;
     const loggingIn = useSelector(state => state.authentication.loggingIn);
     const dispatch = useDispatch();

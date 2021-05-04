@@ -163,7 +163,6 @@ function Pagination(props) {
           </a>
         </li>
       </ul>
-      {pager.currentPage} / {pager.totalPages}
     </>
   );
 }

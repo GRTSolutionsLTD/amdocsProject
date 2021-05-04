@@ -7,8 +7,8 @@ import Pagination from "../../_components/pagination/pagination";
 
 function ListPage() {
   const list = useSelector((state) => state.list);
-  const [currentItems, setCurrentItems] = useState([]);
-  const [selectedPositions, setSelectedPositions] = useState(null);
+  const mapPositions= getMapPoisitions(list.items);
+  const [centerPosition, setCenterPosition]= useState(list.items.length>0? list.items[0]: null);
 
   const dispatch = useDispatch();
 
@@ -16,42 +16,25 @@ function ListPage() {
     dispatch(listActions.getAll());
   }, []);
 
-  function handleDeleteItem(id) {
-    dispatch(listActions.delete(id));
-  }
-
-  function onChangePage(pager) {
-    console.log("pager", pager);
-    setCurrentItems(pager.items);
+  function getMapPoisitions(){
+    return list.items.map(item => {
+      return {
+        key: item.id,
+        lat: +item.Latitude,
+        lng: +item.Longitude,
+        title: item.StoreName,
+        description: '',
+      }
+    })
   }
 
   function onRowSelected(item) {
-    const mapPositions = [
-      {
-        key: item.id,
-        lat: item.positions[0].lat,
-        lng: item.positions[0].lng,
-        title: `userId ${item.userId}`,
-        description: item.title,
-      },{
-        key: item.id,
-        lat: item.positions[1].lat,
-        lng: item.positions[1].lng,
-        title: `userId ${item.userId}`,
-        description: item.title,
-      }
-    ];
-    setSelectedPositions(mapPositions);
+    const focusPosition = {
+        lat: +item.Latitude,
+        lng: +item.Longitude,
+    };
+    setCenterPosition(focusPosition);
   }
-
-  const positions = [
-    {
-      lat: 43.656132,
-      lng: -79.380423,
-      title: "test title",
-      description: "test description",
-    },
-  ];
 
   return (
     <>
@@ -63,26 +46,25 @@ function ListPage() {
               {list.error && (
                 <span className="text-danger">ERROR: {list.error}</span>
               )}
-              {currentItems && (
+              {list.items && (
                 <ul>
-                  {currentItems.map((item, index) => (
+                  {list.items.map((item, index) => (
                     <li
                       key={item.id}
                       onClick={() => {
                         onRowSelected(item);
                       }}
                     >
-                      {item.title}
+                      {item.StoreName}
                     </li>
                   ))}
                 </ul>
               )}
             </div>
-            <Pagination items={list.items} onChangePage={onChangePage} />
           </div>
         </div>
         <div className="col-3">
-          {selectedPositions && <Map positions={selectedPositions} />}
+          {mapPositions && <Map positions={mapPositions} center={centerPosition} />}
         </div>
       </div>
     </>

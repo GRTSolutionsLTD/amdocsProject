@@ -7,13 +7,16 @@ import {
   InfoWindow,
 } from "react-google-maps";
 
-function MapPosition({ positions }) {
+function MapPosition({ positions, center }) {
   const [selectedPosition, setSelectedPosition] = useState(null);
+  if (!center) {
+    center = { lat: 43.6561, lng: -79.3802 };
+  }
 
   useEffect(() => {
     const listener = (e) => {
       if (e.key === "Escape") {
-        setIsPopup(false);
+        setSelectedPosition(null);
       }
     };
     window.addEventListener("keydown", listener);
@@ -22,11 +25,12 @@ function MapPosition({ positions }) {
       window.removeEventListener("keydown", listener);
     };
   }, []);
+
   return (
     <GoogleMap
       key={new Date().getTime()}
-      defaultZoom={15}
-      defaultCenter={{ lat: 43.6561, lng: -79.3802 }}
+      defaultZoom={1}
+      defaultCenter={center}
     >
       {positions.map((position) => {
         return (
@@ -40,7 +44,8 @@ function MapPosition({ positions }) {
               setSelectedPosition(position);
             }}
             icon={{
-              url: "https://img.icons8.com/color/48/000000/map-pin.png",
+              url:
+                "https://icons-for-free.com/iconfiles/png/512/location+maker+map+icon-1320166084997417306.png",
               scaledSize: new window.google.maps.Size(50, 50),
             }}
           />
@@ -58,7 +63,7 @@ function MapPosition({ positions }) {
           }}
         >
           <div>
-            <h2>{selectedPosition.title}</h2>
+            <h5>{selectedPosition.title}</h5>
             <p>{selectedPosition.description}</p>
           </div>
         </InfoWindow>
@@ -79,11 +84,12 @@ example:
     description: "test description"
   }]
 */
-export default function Map({ positions }) {
+export default function Map({ positions, center }) {
   return (
     <div style={{ width: "30vw", height: "100vh" }}>
       <MapWrapped
         positions={positions}
+        center={center}
         googleMapURL={`https://maps.googleapis.com/maps/api/js?key=AIzaSyAzo9Xzk5QwuAixqF8Kxdxp1zgMfL2DtKA&v=3.exp&libraries=geometry,drawing,places}`}
         loadingElement={<div style={{ height: `100%` }} />}
         containerElement={<div style={{ height: `100%` }} />}
