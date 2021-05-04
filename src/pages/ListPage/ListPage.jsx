@@ -12,6 +12,8 @@ function ListPage() {
     list.items.length > 0 ? list.items[0] : null
   );
 
+  const [selectedItem, setSeletctedItem] = useState(null);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -35,6 +37,7 @@ function ListPage() {
       lat: +item.Latitude,
       lng: +item.Longitude,
     };
+    setSeletctedItem(item);
     setCenterPosition(focusPosition);
   }
 
@@ -61,7 +64,7 @@ function ListPage() {
         </div>
         <div className="col-3">
           {mapPositions && (
-            <MapComponent positions={mapPositions} center={centerPosition} />
+            <MapComponent positions={mapPositions} center={centerPosition} selected={selectedItem==null? null: selectedItem.id } />
           )}
         </div>
       </div>
