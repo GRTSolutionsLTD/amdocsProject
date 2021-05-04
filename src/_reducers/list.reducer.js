@@ -1,12 +1,19 @@
+import { SortTypeEnum } from '../_components/StoresList/StoresList';
 import { listConstants } from '../_constants';
 const initialState = {
     loading: false,
     error: false,
     items: [],
-    filterText: ''
+    filterText: '',
+    sortType: SortTypeEnum.ASC
 }
 export function list(state = initialState, action) {
     switch (action.type) {
+        case listConstants.SET_SORT_TYPE:
+            return {
+                ...state,
+                sortType: action.sortType
+            }
         case listConstants.SET_FILTER:
             return {
                 ...state,

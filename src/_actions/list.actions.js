@@ -4,11 +4,16 @@ import { listService } from '../_services';
 export const listActions = {
     getAll,
     delete: _delete,
-    setFilter
+    setFilter,
+    setSortType
 };
 
 function setFilter(filterText) {
     return { type: listConstants.SET_FILTER, filterText }
+}
+
+function setSortType(sortType) {
+    return { type: listConstants.SET_SORT_TYPE, sortType }
 }
 
 function getAll() {

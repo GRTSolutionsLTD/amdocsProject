@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { listActions } from "../../_actions";
 import MapComponent from "../../_components/MapComponent/MapComponent";
-import { StoresList } from "../../_components/StoresList/StoresList";
+import {
+  StoresList,
+  SortTypeEnum,
+} from "../../_components/StoresList/StoresList";
 
 function ListPage() {
   const list = useSelector((state) => state.list);
@@ -46,10 +49,14 @@ function ListPage() {
     dispatch(listActions.setFilter(value));
   }
 
+  function sortChanged(sortType) {
+    dispatch(listActions.setSortType(sortType));
+  }
+
   return (
     <>
-      <div className="row">
-        <div className="col">
+      <div className="d-flex flex-row">
+        <div className="flex-column">
           <div class="input-group">
             <input
               type="search"
@@ -65,6 +72,24 @@ function ListPage() {
             </button>
           </div>
         </div>
+        <div className="flex-column">
+          <button
+            type="button"
+            className="btn btn-light"
+            onClick={() => sortChanged(SortTypeEnum.ASC)}
+          >
+            Sort ASC
+          </button>
+        </div>
+        <div className="flex-column">
+          <button
+            type="button"
+            className="btn btn-light"
+            onClick={() => sortChanged(SortTypeEnum.DESC)}
+          >
+            Sort DESC
+          </button>
+        </div>
       </div>
       <div className="row">
         <div className="col-9">
@@ -78,7 +103,7 @@ function ListPage() {
                 <StoresList
                   items={list.items}
                   filterText={list.filterText}
-                  sortType={0}
+                  sortType={list.sortType}
                   onRowSelected={onRowSelected}
                 />
               )}
